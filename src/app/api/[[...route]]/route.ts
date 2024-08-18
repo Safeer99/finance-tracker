@@ -1,7 +1,9 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import accounts from "./accounts";
-import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
+import categories from "./categories";
+import transactions from "./transactions";
+import { clerkMiddleware } from "@hono/clerk-auth";
 
 export const runtime = "edge";
 
@@ -18,7 +20,10 @@ app.use(clerkMiddleware());
 //   await next();
 // });
 
-const routes = app.route("/accounts", accounts);
+const routes = app
+  .route("/accounts", accounts)
+  .route("/categories", categories)
+  .route("/transactions", transactions);
 
 export const GET = handle(app);
 export const POST = handle(app);
