@@ -1,11 +1,16 @@
+import { auth } from "@/auth";
 import { Header } from "@/components/header";
+import { redirect } from "next/navigation";
 import React from "react";
 
 interface Props {
   children: React.ReactNode;
 }
 
-const DashboardLayout = ({ children }: Props) => {
+const DashboardLayout = async ({ children }: Props) => {
+  const session = await auth();
+  if (!session) return redirect("/sign-in");
+
   return (
     <>
       <Header />

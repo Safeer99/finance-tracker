@@ -2,14 +2,14 @@ import { Hono } from "hono";
 import { db } from "@/db/drizzle";
 import { accounts, insertAccountSchema } from "@/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
-import { getAuth } from "@hono/clerk-auth";
 import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
+import { getAuth } from "./auth";
 
 const app = new Hono()
   .get("/", async (c) => {
-    const auth = getAuth(c);
+    const auth = await getAuth();
 
     if (!auth?.userId) {
       return c.json({ error: "Unauthorized" }, 401);
@@ -34,7 +34,7 @@ const app = new Hono()
       })
     ),
     async (c) => {
-      const auth = getAuth(c);
+      const auth = await getAuth();
       const { id } = c.req.valid("param");
 
       if (!auth?.userId) {
@@ -69,7 +69,7 @@ const app = new Hono()
       })
     ),
     async (c) => {
-      const auth = getAuth(c);
+      const auth = await getAuth();
       const values = c.req.valid("json");
 
       if (!auth?.userId) {
@@ -97,7 +97,7 @@ const app = new Hono()
       })
     ),
     async (c) => {
-      const auth = getAuth(c);
+      const auth = await getAuth();
       const values = c.req.valid("json");
 
       if (!auth?.userId) {
@@ -129,7 +129,7 @@ const app = new Hono()
     ),
     zValidator("json", insertAccountSchema.pick({ name: true })),
     async (c) => {
-      const auth = getAuth(c);
+      const auth = await getAuth();
       const { id } = c.req.valid("param");
       const values = c.req.valid("json");
 
@@ -163,7 +163,7 @@ const app = new Hono()
       })
     ),
     async (c) => {
-      const auth = getAuth(c);
+      const auth = await getAuth();
       const { id } = c.req.valid("param");
 
       if (!auth?.userId) {

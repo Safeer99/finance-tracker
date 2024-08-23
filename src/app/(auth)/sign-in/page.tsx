@@ -1,9 +1,9 @@
-import { ClerkLoaded, ClerkLoading, SignUp } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
+import { Social } from "@/components/social";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
-const SignUpPage = () => {
+const SignInPage = async () => {
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       <div className="h-full lg:flex flex-col items-center justify-center px-4">
@@ -13,13 +13,14 @@ const SignUpPage = () => {
             Log in or Create account to get back to your dashboard!
           </p>
         </div>
-        <div className="flex items-center justify-center mt-8">
-          <ClerkLoaded>
-            <SignUp path="/sign-up" />
-          </ClerkLoaded>
-          <ClerkLoading>
-            <Loader2 className="animate-spin text-muted-foreground" />
-          </ClerkLoading>
+        <div className="w-full flex items-center justify-center mt-8">
+          <Social />
+        </div>
+        <div className="text-base text-[#7E8CA0] mt-4">
+          Don't have an account?
+          <Link href="/sign-up" className="underline ml-2 hover:text-blue-600">
+            signup
+          </Link>
         </div>
       </div>
       <div className="h-full bg-blue-600 hidden lg:flex items-center justify-center">
@@ -29,4 +30,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignInPage;
