@@ -17,7 +17,7 @@ const SignInPage = async () => {
           <Social />
         </div>
         <div className="text-base text-[#7E8CA0] mt-4">
-          Don't have an account?
+          Don&apos;t have an account?
           <Link href="/sign-up" className="underline ml-2 hover:text-blue-600">
             signup
           </Link>
