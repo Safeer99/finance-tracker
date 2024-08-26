@@ -36,9 +36,23 @@ export const Select = ({
       styles={{
         control: (base) => ({
           ...base,
-          borderColor: "#e2e8f0",
+          background: "transparent",
+          borderColor: "hsl(var(--accent))",
           ":hover": {
-            borderColor: "#e2e8f0",
+            borderColor: "hsl(var(--accent))",
+          },
+        }),
+        menu: (base) => ({
+          ...base,
+          background: "hsl(var(--background))",
+          borderWidth: "1px",
+          borderColor: "hsl(var(--accent))",
+        }),
+        option: (base, state) => ({
+          ...base,
+          background: state.isFocused ? "hsl(var(--accent))" : "transparent",
+          ":hover": {
+            background: "hsl(var(--accent))",
           },
         }),
       }}

@@ -4,8 +4,7 @@ import {
   RadialBarChart,
   ResponsiveContainer,
 } from "recharts";
-import { formatCurrency, formatPercentage } from "@/lib/utils";
-import { CategoryTooltip } from "@/components/data-charts/category-tooltip";
+import { formatCurrency } from "@/lib/utils";
 
 const COLORS = ["#0062FF", "#12C6FF", "#FF647F", "#FF9354"];
 
@@ -36,7 +35,9 @@ export const RadialVariant = ({ data }: Props) => {
             fill: "#fff",
             fontSize: "12px",
           }}
-          background
+          background={{
+            fill: "hsl(var(--accent))",
+          }}
           dataKey="value"
         />
         <Legend
