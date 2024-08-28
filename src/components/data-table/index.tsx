@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { Trash } from "lucide-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -21,10 +23,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "./ui/button";
-import { useState } from "react";
-import { Input } from "./ui/input";
-import { Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
+import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { useConfirm } from "@/hooks/use-confirm";
 
 interface DataTableProps<TData, TValue> {
@@ -33,6 +35,12 @@ interface DataTableProps<TData, TValue> {
   filterKey: string;
   onDelete: (rows: Row<TData>[]) => void;
   disabled: boolean;
+  facetedFilterColumn?: string;
+  facetedFilterOptions?: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
 }
 
 export function DataTable<TData, TValue>({
@@ -41,6 +49,8 @@ export function DataTable<TData, TValue>({
   filterKey,
   onDelete,
   disabled,
+  facetedFilterColumn,
+  facetedFilterOptions,
 }: DataTableProps<TData, TValue>) {
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
@@ -72,14 +82,27 @@ export function DataTable<TData, TValue>({
     <div>
       <ConfirmDialog />
       <div className="flex items-center py-4">
-        <Input
-          placeholder={`Filter ${filterKey}...`}
-          value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterKey)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder={`Filter ${filterKey}...`}
+            value={
+              (table.getColumn(filterKey)?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn(filterKey)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          {facetedFilterOptions &&
+            facetedFilterColumn &&
+            table.getColumn(facetedFilterColumn) && (
+              <DataTableFacetedFilter
+                title={facetedFilterColumn}
+                column={table.getColumn(facetedFilterColumn)}
+                options={facetedFilterOptions}
+              />
+            )}
+        </div>
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <Button
             size="sm"
@@ -149,28 +172,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }

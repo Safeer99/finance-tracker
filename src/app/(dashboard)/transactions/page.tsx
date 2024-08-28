@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Loader2, Plus } from "lucide-react";
 import { transactions as transactionsSchema } from "@/db/schema";
 import { DataTable } from "@/components/data-table";
@@ -75,6 +75,19 @@ const TransactionsPage = () => {
     });
   };
 
+  const filterOptions = useMemo(() => {
+    const filterItemsMap = new Map();
+    transactions?.forEach((transaction) => {
+      filterItemsMap.set(transaction.category, {
+        value: transaction.category,
+        label: transaction.category,
+      });
+    });
+
+    const uniqueItems = new Set(filterItemsMap.values());
+    return Array.from(uniqueItems);
+  }, [transactions]);
+
   if (transactionsQuery.isLoading) {
     return <LoadingTransactionsPage />;
   }
@@ -120,6 +133,8 @@ const TransactionsPage = () => {
               deleteTransactions.mutate({ ids });
             }}
             disabled={isDisabled}
+            facetedFilterColumn="category"
+            facetedFilterOptions={filterOptions}
           />
         </CardContent>
       </Card>

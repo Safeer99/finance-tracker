@@ -72,6 +72,9 @@ export const columns: ColumnDef<ResponseType>[] = [
         </Button>
       );
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
     cell: ({ row }) => {
       return (
         <CategoryColumn
