@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { NavButton } from "@/components/header/nav-button";
 import { useMedia } from "react-use";
 import { useState } from "react";
@@ -39,12 +39,20 @@ const routes = [
 export const Navigation = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isMobile = useMedia("(max-width: 1024px)", false);
 
   const [open, setOpen] = useState(false);
 
+  const pathWithSearchParams = (href: string) => {
+    const sp = searchParams.toString();
+    const path = `${href}${sp.length > 0 ? `?${sp}` : ""}`;
+    return path;
+  };
+
   const onClick = (href: string) => {
-    router.push(href);
+    const path = pathWithSearchParams(href);
+    router.push(path);
     setOpen(false);
   };
 
@@ -84,7 +92,7 @@ export const Navigation = () => {
       {routes.map((route) => (
         <NavButton
           key={route.href}
-          href={route.href}
+          href={pathWithSearchParams(route.href)}
           label={route.label}
           isActive={pathname === route.href}
         />
